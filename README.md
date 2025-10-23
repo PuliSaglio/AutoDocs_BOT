@@ -18,4 +18,4 @@ O **AutoDocs** é um bot de automação self-hosted projetado para otimizar proc
 
 📜 Documentação Completa
 
-Para a arquitetura detalhada, fluxos de trabalho e instruções de manutenção da VM, consulte a Documentação Técnica do Projeto (PDF) .
+Para a arquitetura detalhada, fluxos de trabalho e instruções de manutenção da VM, consulte a [Documentação Técnica do Projeto (PDF)](https://github.com/PuliSaglio/AutoDocs_BOT/blob/main/Documenta%C3%A7%C3%A3o%20AutoDocs%20Telegram%20BOT.pdf) .
