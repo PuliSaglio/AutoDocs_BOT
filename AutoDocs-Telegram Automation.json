@@ -1,0 +1,3156 @@
+{
+  "name": "Telegram Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1648,
+        1392
+      ],
+      "id": "ce3bf595-bca0-4aae-8b91-8465c6411e6a",
+      "name": "Telegram Trigger",
+      "webhookId": "85a83f10-7ca0-4a60-8589-389cbc0ad568",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e211fbcd-a6e7-46ef-b4b0-77697d67c32a",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "=/",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1152,
+        1392
+      ],
+      "id": "e5d35e5c-e2e9-42a9-9a32-8ecae7a35e82",
+      "name": "Command?"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/newdoc",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "fb5c758c-6b71-4404-90b1-766027d4ec95"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Criar Documento"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5d028bd1-147b-4a8d-85cc-4c2abe0999c0",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/newrelatorio",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Injetar Conteúdo em Doc"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d15445f4-258b-40d4-a7c1-1361a2cd6d94",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/news",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Pegar noticias do G1"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "51779fa1-fe68-4541-9d1d-fd952f7c0f84",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/start",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Inicio conversa"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -864,
+        1232
+      ],
+      "id": "243429e5-dc46-4fd4-938c-b80959565db3",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "129e545b-63b8-4e8f-880b-2a23ef7ab824",
+              "name": "message.text",
+              "value": "={{ $json?.message?.text || \"\" }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1440,
+        1392
+      ],
+      "id": "055e59ef-7b31-47ae-8418-4e793a7823e8",
+      "name": "Pre Processing"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "=Desculpe não consegui entender o comando:  {{ $('Command?').item.json.message.text }}\nPor favor digite um dos comandos existentes:\n/newdoc\n/newrelatorio\n/news\n/start",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -608,
+        1984
+      ],
+      "id": "6915eaef-ee2a-4644-b082-03b856a49124",
+      "name": "Mensagem fallback comandos",
+      "webhookId": "810c1520-fc92-4091-82ed-7b0e7e16f22c",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendChatAction",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "action": "upload_document"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1408,
+        432
+      ],
+      "id": "35b58e42-b576-46f5-baec-86ac8b2532b8",
+      "name": "Enviando doc",
+      "webhookId": "d63b2de4-71e5-4ca9-a53b-29947db4f74a",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Criando cópia do modelo 2 e inserindo os dados\n\n",
+        "height": 272,
+        "width": 752
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        352
+      ],
+      "id": "bd6a375a-9753-4db5-af1c-1a34102ad84c",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "operation": "sendChatAction",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -480,
+        432
+      ],
+      "id": "d6fe63c3-338e-4dbb-bdf9-fca0e555484c",
+      "name": "Typing Action",
+      "webhookId": "60cb3177-5446-4667-a6a7-26e068b5afb0",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendChatAction",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        816,
+        432
+      ],
+      "id": "b25d1fba-aeaf-4981-bacc-a66149355abb",
+      "name": "Typing Action1",
+      "webhookId": "b25076f8-944b-4d67-91f6-40f316ca3a28",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=✅ <b>Documento Criado com Sucesso!</b>\n\nSeu documento oficial foi gerado, preenchido com os dados que você forneceu e exportado para PDF.\n\nVocê pode acessá-lo agora:\n\n🔗 <b>Link Público (Google Docs):</b>\n<a href=\"https://docs.google.com/document/d/{{ $('Atualizando os dados do modelo2').item.json.documentId }}\">Visualizar Documento Online</a>\n\n📎<b>O arquivo PDF está anexado abaixo.</b>\n\nObrigado por utilizar a nossa automação!\n----------------------------------------\n💡 <b>Gostaria de testar outros formatos?</b>\nUse: /newdoc ou /newdoc modelo3.",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1216,
+        432
+      ],
+      "id": "c4e53f38-a8ca-4d2f-9355-748cb5823d04",
+      "name": "Enviando mensagem de sucesso com link",
+      "webhookId": "f3f43cd2-377d-45e1-b1ea-89bda97c1609",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Enviando o modelo 2 e seu link",
+        "height": 272,
+        "width": 1152
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        800,
+        352
+      ],
+      "id": "e1220b56-a04e-4bce-a9a2-8bd0fb5ac752",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "\n## Comentário\nExiste uma redundancia pois os modelos tem informações diferentes propositalmente para maior variação\n\n\n\n",
+        "height": 224,
+        "width": 288
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2064,
+        432
+      ],
+      "id": "9f373247-f2b5-4933-bbeb-970eda85d7bf",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": {
+          "__rl": true,
+          "value": "1HFxtTTMsamZhwdiL4HV1npPEALe_ED3eQ33wg7Kz4ZM",
+          "mode": "list",
+          "cachedResultName": "Relatório Financeiro",
+          "cachedResultUrl": "https://docs.google.com/document/d/1HFxtTTMsamZhwdiL4HV1npPEALe_ED3eQ33wg7Kz4ZM/edit?usp=drivesdk"
+        },
+        "name": "=Relatório Financeiro  {{ $('Telegram Trigger').item.json.message.from.first_name + \" \" + $now.format('dd-MM-yyyy')}}",
+        "sameFolder": false,
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1SeYulTjit4lBqw-nFVi8WJZkNC-CByPq",
+          "mode": "list",
+          "cachedResultName": "Relatorios Gerados",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1SeYulTjit4lBqw-nFVi8WJZkNC-CByPq"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -640,
+        1136
+      ],
+      "id": "f062f4de-1c13-45bb-86b2-d414ca916dde",
+      "name": "Copiando relatorio financeiro",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "mHfdNPq21GvfOBkV",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendChatAction",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -432,
+        1136
+      ],
+      "id": "a76a8473-14df-4118-ab37-c970c3e42e92",
+      "name": "Send a chat action",
+      "webhookId": "5a59cd0a-d472-4659-b01b-7c0205f3885d",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "message": "Fantástico! Vamos formalizar a análise financeira. 📊\n\nPara gerar o seu Relatório Financeiro Simplificado, por favor, clique no link abaixo e preencha o formulário web.\n\nLembre-se: Você precisará anexar a imagem do gráfico (Receita/Despesa ou outro visual) para o relatório.",
+        "responseType": "customForm",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Título do Relatório",
+              "placeholder": "Ex: \"Análise Mensal de Fluxo de Caixa\"",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Resumo Executivo",
+              "fieldType": "textarea",
+              "placeholder": "(Conclusões)",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Valor Total da Receita (R$)",
+              "fieldType": "number",
+              "placeholder": "257.00",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Valor Total da Despesa (R$)",
+              "fieldType": "number",
+              "placeholder": "57.00",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Imagem do Grafico de Fluxo de Caixa",
+              "fieldType": "file",
+              "multipleFiles": false,
+              "acceptFileTypes": ".jpg, .jpeg, .png, .svg",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -224,
+        1136
+      ],
+      "id": "6a5faffd-3004-4327-b566-f649900b0a72",
+      "name": "Send message and wait for response",
+      "webhookId": "c5cebf09-70eb-4904-9f67-3c05e0a23ab8",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $('Copiando relatorio financeiro').item.json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "replaceAll",
+              "text": "{TITULO}",
+              "replaceText": "={{ $('Send message and wait for response').item.json.data['Título do Relatório'] }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "{PERIODO}",
+              "replaceText": "={{ $now.format('MM/yyyy') }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "{RESUMO_EXEC}",
+              "replaceText": "={{ $('Send message and wait for response').item.json.data['Resumo Executivo'] }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "{RECEITA}",
+              "replaceText": "={{ $('Send message and wait for response').item.json.data['Valor Total da Receita (R$)'].toString() }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "{DESPESAS}",
+              "replaceText": "={{ $('Send message and wait for response').item.json.data['Valor Total da Despesa (R$)'].toString() }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        400,
+        1136
+      ],
+      "id": "da8ec069-08bd-42c7-abb6-c201d468d737",
+      "name": "Adicionando dados ao relatorio",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "k9yatLZQhQhsJI3M",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "263ebe16-239a-45e5-b1cb-65bfe2f2a330",
+              "name": "Index da Imagem",
+              "value": "={{ $('Get cópia do relatorio').item.json.content.indexOf('{IMAGEM}') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        864,
+        1136
+      ],
+      "id": "57947a66-bab5-4685-8091-8cf73d05999c",
+      "name": "Set index da imagem"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "documentURL": "={{ $('Copiando relatorio financeiro').item.json.id }}"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        656,
+        1136
+      ],
+      "id": "6681d490-6751-4d4f-a102-61d65445f107",
+      "name": "Get cópia do relatorio",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "k9yatLZQhQhsJI3M",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://docs.googleapis.com/v1/documents/{{ $('Copiando relatorio financeiro').item.json.id }}:batchUpdate",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDocsOAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"requests\": [\n    {\n      \"insertInlineImage\": {\n        \"location\": {\n          \"index\": {{ $('Set index da imagem').item.json['Index da Imagem'] }}\n        },\n        \"uri\": \"https://drive.google.com/uc?id={{ $('Upload Imagem no Drive').item.json.id }}\",\n        \"objectSize\": {\n          \"height\": {\n            \"magnitude\": 400,\n            \"unit\": \"PT\"\n          },\n          \"width\": {\n            \"magnitude\": 520,\n            \"unit\": \"PT\"\n          }\n        }\n      }\n    }\n  ]\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1232,
+        1136
+      ],
+      "id": "ab3850dc-ffb9-447e-8056-cc60fb470f27",
+      "name": "HTTP Request",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "k9yatLZQhQhsJI3M",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "=Imagem_do_Grafico_de_Fluxo_de_Caixa",
+        "name": "=imagem_anexa{{ $('Telegram Trigger').item.json.message.from.first_name + $now }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1GRh2akbNkSHO-pooFVsfVbU7vzxQsxGi",
+          "mode": "list",
+          "cachedResultName": "Imagens",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1GRh2akbNkSHO-pooFVsfVbU7vzxQsxGi"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -16,
+        1136
+      ],
+      "id": "27c86391-2d8a-496c-8f1e-94916b2b9efa",
+      "name": "Upload Imagem no Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "mHfdNPq21GvfOBkV",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        192,
+        1136
+      ],
+      "id": "68e5e0c8-4721-49ef-ad26-0191e2c30f4d",
+      "name": "Conceder permissao de leitura",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "mHfdNPq21GvfOBkV",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $('Get cópia do relatorio').item.json.documentId }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "replaceAll",
+              "text": "{IMAGEM}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        1056,
+        1136
+      ],
+      "id": "8f9cc0f3-14b0-4e0b-9b8b-6458548edc9a",
+      "name": "Update a document",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "k9yatLZQhQhsJI3M",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendChatAction",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1600,
+        1136
+      ],
+      "id": "5bdcb864-d5a3-4a6b-b7dc-2e7a5ea97d87",
+      "name": "Typing Action2",
+      "webhookId": "3698d147-17e0-46bc-9b1b-327d3412c93f",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=✅ <b>Relatório Financeiro Concluído!</b>\n\n📊  O seu Relatório Financeiro Simplificado foi processado, com injeção do resumo executivo e do gráfico anexado.  Você pode acessá-lo agora:  \n\n🔗 <b>Link Público (Google Docs):</b>\n<a href=\"https://docs.google.com/document/d/{{ $('Update a document').item.json.documentId }}\">Visualizar Documento Online</a>\n\n📎 <b>O arquivo PDF está anexado abaixo para fácil download e arquivamento.</b>\n\nQualquer novo relatório ou análise, estou à disposição!",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1808,
+        1136
+      ],
+      "id": "0e6c33f1-efd8-493a-9349-8486229c3f45",
+      "name": "Mensagem de sucesso com link do relatorio",
+      "webhookId": "91b38e88-f116-44ab-a8e5-c25f7f63ae8c",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendChatAction",
+        "chatId": "={{ $json.result.chat.id }}",
+        "action": "upload_document"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2016,
+        1136
+      ],
+      "id": "1c8c3bc6-4e0f-44a9-9a72-32ab93a79c74",
+      "name": "Enviando doc1",
+      "webhookId": "81c6f831-2093-4bba-b249-06c11c03ef28",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Criando cópia do documento, coletando e inserindo dados\n",
+        "height": 288,
+        "width": 1216
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -656,
+        1024
+      ],
+      "id": "76d1bec0-e040-40a9-9e0e-7d7d4fc096b5",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Inserindo imagem no documento\n",
+        "height": 288,
+        "width": 768
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        592,
+        1024
+      ],
+      "id": "4f255563-376d-4abf-bdaf-b2ae53e025bd",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Enviando link + PDF no telegram\n",
+        "height": 288,
+        "width": 1248
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1392,
+        1024
+      ],
+      "id": "6eff1038-d673-4c89-84bc-e30fd6cfdcf4",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        416,
+        1440
+      ],
+      "id": "7caf8a6c-3806-4629-9605-f7987005c465",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $('Telegram Trigger').item.json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -432,
+        2256
+      ],
+      "id": "8cb43e1b-0273-455e-9375-ffcc807ed48b",
+      "name": "Get audio",
+      "webhookId": "37fad83f-d484-448f-aa03-f3d7f484b7dd",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6b38143d-c9f9-4198-84b2-f385ee4e19e0",
+              "leftValue": "={{ $('Telegram Trigger').item.json.message.voice }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -832,
+        2352
+      ],
+      "id": "5646f390-13c8-4a5c-8383-dbf090f5ce0a",
+      "name": "Audio?"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Telegram Trigger').item.json.message.text }}",
+        "options": {
+          "systemMessage": "Você é um Assistente de Automação Corporativa e Produtividade. Seu objetivo principal é direcionar os usuários a utilizarem suas funcionalidades automatizadas.\n\nSua Personalidade: Seja prestativo, profissional, direto e eficiente. Use emojis para indicar as funcionalidades.\n\nSUAS FUNCIONALIDADES PRINCIPAIS (Comandos):\n\n1.Criador de Documentos Corporativos: Gera uma mensagem corporativa formatada em um papel timbrado oficial. Possui 3 modelos diferentes.\n- Comando: Use `/newdoc` ou `/newdoc modelo[X]`.\n- DIFERENÇA ENTRE MODELOS:\n- - Modelo 1 (Padrão/Default): É a versão mais básica, ideal para comunicações curtas e rápidas. Contém apenas os campos obrigatórios e essenciais.\n- - Modelo 2 (Completo): Contém mais informações e campos detalhados, como Telefone, Email, Endereço e Cargo.\n- - Modelo 3 (Completo): Mesmas informações do modelo 2 mais um campo para website. Difere principalmente no visual\n2. Criador de Relatórios Financeiros: Gera um Relatório Financeiro Simplificado em formato PDF, que inclui uma imagem de gráfico fornecida pelo usuário e requer que seja anexada pelo mesmo. Peça para o usuário usar o comando `/newrelatorio`.\n3. Notícias Rápidas: Puxa as 3 notícias mais recentes da capa do G1. Peça para o usuário usar o comando `/news`.\n4. Transcritor de Áudio: Transcreve automaticamente qualquer mensagem de voz ou arquivo de áudio enviado no chat.\n\nINSTRUÇÕES DE RESPOSTA:\n1.  Se a pergunta estiver relacionada a uma das suas funcionalidades (Ex: \"Como eu crio um documento?\"): Responda de forma objetiva, mencione a funcionalidade e indique o comando ou a ação necessária (Ex: \"Para criar um novo documento, use o comando `/newdoc`\").\n2.  Se a pergunta for geral (Ex: \"Olá\" ou \"O que você faz?\"): Apresente-se brevemente e liste suas 3 funcionalidades baseadas em comandos (1, 2 e 3) e o Transcritor (4), incentivando o usuário a utilizá-los.\n3.  NUNCA execute as tarefas de transcrição, relatório ou documento diretamente. Você deve sempre encaminhar o usuário para o comando ou a ação.\n4. INSTRUÇÃO CRÍTICA DE FORMATO: O texto final será enviado via Telegram Markdown Parse Mode HTML. Você DEVE evitar o uso do underscore (_) e do asterísco (*) em texto plano para não quebrar a formatação. Se precisar usar esses caracteres ou se o texto contiver hífens apenas use-os normalmente. A ÚNICA exceção é para links formatados [link](url)."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -400,
+        2592
+      ],
+      "id": "821bf46e-64b7-4cd1-869f-2c4a2bc68117",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        2752
+      ],
+      "id": "d39f1557-ac27-43a3-825f-e2d54167dbae",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AccDWIX4qqwcmEdo",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -48,
+        2592
+      ],
+      "id": "23b0fd44-eb17-4b7f-9122-2d9f224f3ae4",
+      "name": "Enviar resposta Agente",
+      "webhookId": "1efa817a-c8dc-48f1-bdec-d868fc0750a8",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Update a document').item.json.documentId }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "writer",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1440,
+        1136
+      ],
+      "id": "cd670b20-7d16-438f-82e3-53ec6d08e52c",
+      "name": "Compartilhando arquivo1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "mHfdNPq21GvfOBkV",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Update a document').item.json.documentId }}",
+          "mode": "id"
+        },
+        "options": {
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "application/pdf",
+              "drawingsToFormat": "application/pdf",
+              "slidesToFormat": "application/pdf",
+              "sheetsToFormat": "application/pdf"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2224,
+        1136
+      ],
+      "id": "73a3f68b-bd3f-4b82-ae2c-243306a931a9",
+      "name": "Baixando arquivo em PDF1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "mHfdNPq21GvfOBkV",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendDocument",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "binaryData": true,
+        "additionalFields": {
+          "fileName": "=Relatorio Financeiro{{ $('Telegram Trigger').item.json.message.chat.first_name }}.pdf"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2464,
+        1136
+      ],
+      "id": "cf1658e1-2680-4e54-b4de-7fb6b018e4cf",
+      "name": "Enviando o Relatorio",
+      "webhookId": "dca145c6-7a04-4958-8375-f265955363fd",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendChatAction",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -640,
+        1440
+      ],
+      "id": "ff129dc1-1845-4ca0-9a81-f61ee3e69c01",
+      "name": "Typing Action3",
+      "webhookId": "767d1b92-ba0d-433d-b75f-1839360d5ebe",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://g1.globo.com/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -416,
+        1440
+      ],
+      "id": "962d05e8-06e4-4df5-89ec-25b503558999",
+      "name": "Get conteúdo g1"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "noticias",
+              "cssSelector": "div.feed-post",
+              "returnValue": "html",
+              "returnArray": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        -208,
+        1440
+      ],
+      "id": "94b3f633-0800-4905-ae0c-c6638dcd5656",
+      "name": "Extrair notícias"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "=noticias",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        0,
+        1440
+      ],
+      "id": "dae84995-25d0-4d7e-9ad2-9bc0d63a525e",
+      "name": "Split notícias"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "dataPropertyName": "noticias",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "titulo",
+              "cssSelector": "p[elementtiming=\"text-ssr\"]"
+            },
+            {
+              "key": "link_relativo",
+              "cssSelector": "a.feed-post-link",
+              "returnValue": "attribute",
+              "attribute": "href"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        208,
+        1440
+      ],
+      "id": "d95e87c2-e0eb-4f28-bc62-8089a463e019",
+      "name": "Extrair título e link"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=🗞️ *Últimas notícias retiradas do G1* 🗞️\n\n[{{ $json.data[0].titulo }}]({{ $json.data[0].link_relativo }})\n\n[{{ $json.data[1].titulo }}]({{ $json.data[1].link_relativo }})\n\n[{{ $json.data[2].titulo }}]({{ $json.data[2].link_relativo }})\n\nClique no título para ler a matéria completa!\n🤖 *Obrigado por utilizar nosso bot de notícias!* Volte sempre para se manter informado. 😊",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        656,
+        1440
+      ],
+      "id": "a919315f-18b9-498e-96bd-35432b01bba2",
+      "name": "Enviar notícias",
+      "webhookId": "1095f6e0-4a9a-43fa-92bb-8c555d72a523",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Extraindo HTML do g1 e enviando as notícias por Telegram\nAtualmente pega as 3 primeiras notícias do HTML\n",
+        "height": 256,
+        "width": 1472
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -656,
+        1360
+      ],
+      "id": "3bc8994b-3ec0-43b8-a6a7-7dc39e0617a7",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "operation": "sendChatAction",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -608,
+        2256
+      ],
+      "id": "4d3e016b-ddbb-4427-b84f-675e31573ed7",
+      "name": "Typing Action4",
+      "webhookId": "e2bddaab-d885-4df7-9b45-e2628f167c35",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "inputType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        2256
+      ],
+      "id": "cf262567-46d9-4afb-95b6-a59ffb761e69",
+      "name": "Transcrevendo audio",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AccDWIX4qqwcmEdo",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=Você falou:\n{{ $json.content.parts[0].text }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -32,
+        2256
+      ],
+      "id": "88a9e409-25f2-4eb1-8a19-929306dc3137",
+      "name": "Enviando audio transcrito",
+      "webhookId": "560ecdcb-e522-44d9-bf85-e084f2f27c1a",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendChatAction",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -608,
+        2592
+      ],
+      "id": "4bf2b099-294d-4696-ad2b-086652f9e861",
+      "name": "Typing Action5",
+      "webhookId": "763dceff-a83d-4c4c-9464-156f5be9a691",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Extraindo escolha de modelo').item.json.model_choice }}",
+                    "rightValue": "modelo1",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "cedc0627-f178-42bb-bef2-76f77044e8bb"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Modelo 1(default)"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "6fbf150d-abc7-4b68-b858-6fa08a25eb1d",
+                    "leftValue": "={{ $('Extraindo escolha de modelo').item.json.model_choice }}",
+                    "rightValue": "modelo2",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Modelo 2"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "286d97c4-8a6d-4b22-829c-0ff3fb57d62d",
+                    "leftValue": "={{ $('Extraindo escolha de modelo').item.json.model_choice }}",
+                    "rightValue": "modelo3",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Modelo 3"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": 0
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -304,
+        416
+      ],
+      "id": "c8896059-43cd-446b-96c0-d2fdc6bff960",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "content": "## Criando cópia do Modelo 1 e inserindo os dados\n\n",
+        "height": 272,
+        "width": 752
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "470ff1f9-d663-49d9-ab6e-e5ce0d06b6a1",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const messageText = $json.message.text\n\nlet modelName = messageText.replace('/newdoc', '').trim();\n\n//modelo1 é o default\n//se nao especificar quero utilizar o default\nif (modelName === '' || modelName === 'modelo1') {\n  modelName = 'modelo1';\n}\n\nreturn {\n  json: {\n    ...$json, \n    model_choice: modelName\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -672,
+        432
+      ],
+      "id": "144d672c-a032-49d6-b2b6-473932196170",
+      "name": "Extraindo escolha de modelo"
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "message": "Olá! Perfeito, vamos dar início à criação do seu documento oficial. 📄\nOlá! Perfeito, vamos dar início à criação do seu documento oficial. 📄\n\nAtualmente, você está usando o MODELO 2.\n\n    ⚠️ATENÇÃO: Dependendo do modelo escolhido, alguns campos do formulário podem variar. Preencha apenas as informações que são essenciais para o seu documento.\n\nPara coletar todos os dados necessários de forma rápida e organizada, preencha o formulário abaixo.\n\nAssim que você enviar o formulário, eu cuido da automação e te envio o PDF e o link público aqui no chat. 🤖\nAtualmente, você está usando o MODELO 2.\n    ATENÇÃO: Dependendo do modelo escolhido, alguns campos do formulário podem variar. Preencha apenas as informações que são essenciais para o seu documento.\n\nPara coletar todos os dados necessários de forma rápida e organizada, preencha o formulário abaixo.\n\nAssim que você enviar o formulário, eu cuido da automação e te envio o arquivo e o link público aqui no chat. 🤖",
+        "responseType": "customForm",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Identificação da Empresa",
+              "placeholder": "Nome da Empresa/Projeto"
+            },
+            {
+              "fieldLabel": "Destinatário",
+              "placeholder": "Nome do Destinatário",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Nome do Remetente",
+              "placeholder": "Seu Nome Completo",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Cargo do Remetente",
+              "placeholder": "Seu Cargo"
+            },
+            {
+              "fieldLabel": "Telefone do Remetente",
+              "placeholder": "Telefone de Contato"
+            },
+            {
+              "fieldLabel": "E-mail do Remetente",
+              "fieldType": "email",
+              "placeholder": "exemplo@gmail.com",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Endereço do Remetente",
+              "placeholder": "Endereço Completo (Rua, Cidade)"
+            },
+            {
+              "fieldLabel": "Texto de Conteúdo",
+              "fieldType": "textarea",
+              "placeholder": "Conteúdo Principal do Documento",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "limitWaitTime": {
+            "values": {
+              "resumeAmount": 30,
+              "resumeUnit": "minutes"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        80,
+        432
+      ],
+      "id": "39c6b091-d9cd-4b86-a74d-29df54d1e16c",
+      "name": "Coleta de dados modelo 2",
+      "webhookId": "c57866ce-5b53-491b-9b49-e42a82108347",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "message": "Olá! Perfeito, vamos dar início à criação do seu documento oficial. 📄\n\nAtualmente, você está usando o MODELO 1.\n\n    ⚠️ATENÇÃO: Dependendo do modelo escolhido, alguns campos do formulário podem variar. Preencha apenas as informações que são essenciais para o seu documento.\n\nPara coletar todos os dados necessários de forma rápida e organizada, preencha o formulário abaixo.\n\nAssim que você enviar o formulário, eu cuido da automação e te envio o PDF e o link público aqui no chat. 🤖",
+        "responseType": "customForm",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Identificação da Empresa",
+              "placeholder": "Nome da Empresa/Projeto"
+            },
+            {
+              "fieldLabel": "Destinatário",
+              "placeholder": "Nome do Destinatário",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Nome do Remetente",
+              "placeholder": "Seu Nome Completo",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Texto de Conteúdo",
+              "fieldType": "textarea",
+              "placeholder": "Conteúdo Principal do Documento",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "limitWaitTime": {
+            "values": {
+              "resumeAmount": 30,
+              "resumeUnit": "minutes"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        96,
+        80
+      ],
+      "id": "5bb2f0a3-fa18-4028-a58f-d87e0368f6a3",
+      "name": "Coleta de dados modelo 1",
+      "webhookId": "c57866ce-5b53-491b-9b49-e42a82108347",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": {
+          "__rl": true,
+          "value": "1RE55669LzbE47tsF4n6mYOmolXvS59CKixSrn8w8I88",
+          "mode": "list",
+          "cachedResultName": "Papel-Timbrado-Modelo1",
+          "cachedResultUrl": "https://docs.google.com/document/d/1RE55669LzbE47tsF4n6mYOmolXvS59CKixSrn8w8I88/edit?usp=drivesdk"
+        },
+        "name": "=Papel Timbrado {{ $('Extraindo escolha de modelo').item.json.model_choice }} de {{ $('Telegram Trigger').item.json.message.from.first_name + \" \" +$now}}",
+        "sameFolder": false,
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "15k5Mx02CdeMVB4fi80sFNVEwU7c_I7xk",
+          "mode": "list",
+          "cachedResultName": "Documentos Gerados",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/15k5Mx02CdeMVB4fi80sFNVEwU7c_I7xk"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        320,
+        80
+      ],
+      "id": "6b6175fd-66bd-4e8e-99e2-9644404b5634",
+      "name": "Criando cópia do modelo 1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "mHfdNPq21GvfOBkV",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": {
+          "__rl": true,
+          "value": "1ZT7hw03ksMqCuaaVpwfcJRiYrWQThU1r52yuFbq4fIU",
+          "mode": "list",
+          "cachedResultName": "Papel-Timbrado-Modelo1",
+          "cachedResultUrl": "https://docs.google.com/document/d/1ZT7hw03ksMqCuaaVpwfcJRiYrWQThU1r52yuFbq4fIU/edit?usp=drivesdk"
+        },
+        "name": "=Papel Timbrado de {{ $('Telegram Trigger').item.json.message.from.first_name + \" \" +$now.format('dd-MM-yyyy')}}",
+        "sameFolder": false,
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "15k5Mx02CdeMVB4fi80sFNVEwU7c_I7xk",
+          "mode": "list",
+          "cachedResultName": "Documentos Gerados",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/15k5Mx02CdeMVB4fi80sFNVEwU7c_I7xk"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        320,
+        432
+      ],
+      "id": "151261f7-1489-42cf-a52b-8711560bc4ac",
+      "name": "Criando cópia do modelo 2",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "mHfdNPq21GvfOBkV",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Enviando o modelo 1 e seu link",
+        "height": 272,
+        "width": 1152
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        784,
+        0
+      ],
+      "id": "20d5e399-713e-4dc5-8606-49009c817b3f",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "operation": "sendChatAction",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        816,
+        80
+      ],
+      "id": "34d0536e-fef7-4eae-a252-51be97751adc",
+      "name": "Typing Action7",
+      "webhookId": "b25076f8-944b-4d67-91f6-40f316ca3a28",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=✅ <b>Documento Criado com Sucesso!</b>\n\nSeu documento oficial foi gerado, preenchido com os dados que você forneceu e exportado para PDF.\n\nVocê pode acessá-lo agora:\n\n🔗 <b>Link Público (Google Docs):</b>\n<a href=\"https://docs.google.com/document/d/{{ $('Atualizando os dados do modelo1').item.json.documentId }}\">Visualizar Documento Online</a>\n\n📎<b>O arquivo PDF está anexado abaixo.</b>\n\nObrigado por utilizar a nossa automação!\n----------------------------------------\n💡 <b>Gostaria de testar outros formatos?</b>\nUse: /newdoc modelo2 ou /newdoc modelo3.",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1200,
+        80
+      ],
+      "id": "6dbef29f-a521-4c84-b6b6-269ea68efd39",
+      "name": "Enviando mensagem de sucesso com link1",
+      "webhookId": "f3f43cd2-377d-45e1-b1ea-89bda97c1609",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendChatAction",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "action": "upload_document"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1392,
+        80
+      ],
+      "id": "b4ad173d-d3a1-4a43-9ad4-2caaea6deb3a",
+      "name": "Enviando doc2",
+      "webhookId": "d63b2de4-71e5-4ca9-a53b-29947db4f74a",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Atualizando os dados do modelo1').item.json.documentId }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "writer",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        992,
+        80
+      ],
+      "id": "81920188-9f8f-455b-b6e8-56957fc2365d",
+      "name": "Compartilhando modelo1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "mHfdNPq21GvfOBkV",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Atualizando os dados do modelo2').item.json.documentId }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "writer",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1008,
+        432
+      ],
+      "id": "95482b8c-4e47-40fa-97e7-00f28fea0030",
+      "name": "Compartilhando modelo2",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "mHfdNPq21GvfOBkV",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Atualizando os dados do modelo1').item.json.documentId }}",
+          "mode": "id"
+        },
+        "options": {
+          "binaryPropertyName": "Papel Timbrado.pdf",
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "application/pdf",
+              "drawingsToFormat": "application/pdf",
+              "slidesToFormat": "application/pdf",
+              "sheetsToFormat": "application/pdf"
+            }
+          },
+          "fileName": "=Papel Timbrado de {{ $('Telegram Trigger').item.json.message.from.first_name }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1584,
+        80
+      ],
+      "id": "e5878aec-bfb9-4139-84ef-5003b405bc0e",
+      "name": "Baixando modelo1 em PDF2",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "mHfdNPq21GvfOBkV",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Atualizando os dados do modelo2').item.json.documentId }}",
+          "mode": "id"
+        },
+        "options": {
+          "binaryPropertyName": "Papel Timbrado.pdf",
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "application/pdf",
+              "drawingsToFormat": "application/pdf",
+              "slidesToFormat": "application/pdf",
+              "sheetsToFormat": "application/pdf"
+            }
+          },
+          "fileName": "=Papel Timbrado de {{ $('Telegram Trigger').item.json.message.from.first_name }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1600,
+        432
+      ],
+      "id": "d94e5c63-47ea-453e-9fcf-d3e1b9764a4a",
+      "name": "Baixando modelo2 em PDF",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "mHfdNPq21GvfOBkV",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendDocument",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "binaryData": true,
+        "binaryPropertyName": "Papel Timbrado.pdf",
+        "additionalFields": {
+          "fileName": "Papel Timbrado.pdf"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1776,
+        80
+      ],
+      "id": "068ae6f1-767e-43ab-ba0f-1f915b357e1c",
+      "name": "Enviando o modelo1",
+      "webhookId": "11db7686-9792-4f82-97f4-b9ca2b4e66de",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendDocument",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "binaryData": true,
+        "binaryPropertyName": "Papel Timbrado.pdf",
+        "additionalFields": {
+          "fileName": "Papel Timbrado.pdf"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1792,
+        432
+      ],
+      "id": "214d7b8a-59ae-4603-9bcd-9a9f7aa57915",
+      "name": "Enviando o modelo2",
+      "webhookId": "11db7686-9792-4f82-97f4-b9ca2b4e66de",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendChatAction",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "action": "upload_document"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1408,
+        752
+      ],
+      "id": "0257212e-58f4-4603-9d17-b197a9fe6b41",
+      "name": "Enviando doc3",
+      "webhookId": "d63b2de4-71e5-4ca9-a53b-29947db4f74a",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Criando cópia do modelo 3 e inserindo os dados\n\n",
+        "height": 272,
+        "width": 752
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        672
+      ],
+      "id": "3b360ff7-61dd-47cf-bba8-5b0003bbc367",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "operation": "sendChatAction",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        816,
+        752
+      ],
+      "id": "52a509e0-0435-407a-9859-d144f61d411c",
+      "name": "Typing Action6",
+      "webhookId": "b25076f8-944b-4d67-91f6-40f316ca3a28",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=✅ <b>Documento Criado com Sucesso!</b>\n\nSeu documento oficial foi gerado, preenchido com os dados que você forneceu e exportado para PDF.\n\nVocê pode acessá-lo agora:\n\n🔗 <b>Link Público (Google Docs):</b>\n<a href=\"https://docs.google.com/document/d/{{ $('Atualizando os dados do modelo3').item.json.documentId }}\">Visualizar Documento Online</a>\n\n📎<b>O arquivo PDF está anexado abaixo.</b>\n\nObrigado por utilizar a nossa automação!\n----------------------------------------\n💡 <b>Gostaria de testar outros formatos?</b>\nUse: /newdoc ou /newdoc modelo2.",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1216,
+        752
+      ],
+      "id": "0214b144-df8c-4a32-8fc3-39adad6a721d",
+      "name": "Enviando mensagem de sucesso com link2",
+      "webhookId": "f3f43cd2-377d-45e1-b1ea-89bda97c1609",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Enviando o modelo 3 e seu link",
+        "height": 272,
+        "width": 1152
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        800,
+        672
+      ],
+      "id": "f585fea6-7397-4ab2-9b61-b1574e97e8f9",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": {
+          "__rl": true,
+          "value": "1AcBXtKnfDvgWpdHKwV-cOUZtHVoCaOc8bad-dIh7XOw",
+          "mode": "list",
+          "cachedResultName": "Papel-Timbrado-Modelo3",
+          "cachedResultUrl": "https://docs.google.com/document/d/1AcBXtKnfDvgWpdHKwV-cOUZtHVoCaOc8bad-dIh7XOw/edit?usp=drivesdk"
+        },
+        "name": "=Papel Timbrado {{ $('Extraindo escolha de modelo').item.json.model_choice }} de {{ $('Telegram Trigger').item.json.message.from.first_name + \" \" +$now }}",
+        "sameFolder": false,
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "15k5Mx02CdeMVB4fi80sFNVEwU7c_I7xk",
+          "mode": "list",
+          "cachedResultName": "Documentos Gerados",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/15k5Mx02CdeMVB4fi80sFNVEwU7c_I7xk"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        320,
+        752
+      ],
+      "id": "718bb9f4-6ff7-451b-82ef-1b4074fba9c3",
+      "name": "Criando cópia do modelo ",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "mHfdNPq21GvfOBkV",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "message": "Olá! Perfeito, vamos dar início à criação do seu documento oficial. 📄\n\nAtualmente, você está usando o MODELO 3.\n\n    ⚠️ATENÇÃO: Dependendo do modelo escolhido, alguns campos do formulário podem variar. Preencha apenas as informações que são essenciais para o seu documento.\n\nPara coletar todos os dados necessários de forma rápida e organizada, preencha o formulário abaixo.\n\nAssim que você enviar o formulário, eu cuido da automação e te envio o PDF e o link público aqui no chat. 🤖",
+        "responseType": "customForm",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Identificação da Empresa",
+              "placeholder": "Nome da Empresa/Projeto"
+            },
+            {
+              "fieldLabel": "Destinatário",
+              "placeholder": "Nome do Destinatário",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Nome do Remetente",
+              "placeholder": "Seu Nome Completo",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Cargo do Remetente",
+              "placeholder": "Seu Cargo"
+            },
+            {
+              "fieldLabel": "Telefone do Remetente",
+              "placeholder": "Telefone de Contato"
+            },
+            {
+              "fieldLabel": "E-mail do Remetente",
+              "fieldType": "email",
+              "placeholder": "exemplo@gmail.com"
+            },
+            {
+              "fieldLabel": "Endereço do Remetente",
+              "placeholder": "Endereço Completo (Rua, Cidade)"
+            },
+            {
+              "fieldLabel": "Website",
+              "placeholder": "www.website.com"
+            },
+            {
+              "fieldLabel": "Texto de Conteúdo",
+              "fieldType": "textarea",
+              "placeholder": "Conteúdo Principal do Documento",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "limitWaitTime": {
+            "values": {
+              "resumeAmount": 30,
+              "resumeUnit": "minutes"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        80,
+        752
+      ],
+      "id": "95ef967d-c800-497b-b1ba-9bb86dc5b57a",
+      "name": "Coleta de dados modelo3",
+      "webhookId": "c57866ce-5b53-491b-9b49-e42a82108347",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Atualizando os dados do modelo3').item.json.documentId }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "writer",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1008,
+        752
+      ],
+      "id": "fc111077-b8e0-4d9b-a45d-5740f80ae8f1",
+      "name": "Compartilhando modelo3",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "mHfdNPq21GvfOBkV",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "replaceAll",
+              "text": "[NOME DA EMPRESA]",
+              "replaceText": "={{ $('Coleta de dados modelo 1').item.json.data['Identificação da Empresa']? $('Coleta de dados modelo 1').item.json.data['Identificação da Empresa']: \"\" }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "[DESTINATARIO]",
+              "replaceText": "={{ $('Coleta de dados modelo 1').item.json.data['Destinatário'] }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "[DATA_ATUAL]",
+              "replaceText": "={{$now.format('dd/MM/yyyy')}}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "[CONTEUDO_INJETADO]",
+              "replaceText": "={{ $('Coleta de dados modelo 1').item.json.data['Texto de Conteúdo'] }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "[REMETENTE]",
+              "replaceText": "={{ $('Coleta de dados modelo 1').item.json.data['Nome do Remetente'] }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        560,
+        80
+      ],
+      "id": "86841673-00c1-461e-9614-0d9cd78f1df5",
+      "name": "Atualizando os dados do modelo1",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "k9yatLZQhQhsJI3M",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "replaceAll",
+              "text": "[NOME DA EMPRESA]",
+              "replaceText": "={{ $('Coleta de dados modelo 2').item.json.data['Identificação da Empresa']? $('Coleta de dados modelo 2').item.json.data['Identificação da Empresa']: \"\" }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "[DESTINATARIO]",
+              "replaceText": "={{ $('Coleta de dados modelo 2').item.json.data['Destinatário'] }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "[DATA_ATUAL]",
+              "replaceText": "={{$now.format('dd/MM/yyyy')}}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "[TELEFONE]",
+              "replaceText": "={{ $('Coleta de dados modelo 2').item.json.data['Telefone do Remetente']? $('Coleta de dados modelo 2').item.json.data['Telefone do Remetente'] : \"Contato via E-mail\" }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "[EMAIL]",
+              "replaceText": "={{ $('Coleta de dados modelo 2').item.json.data['E-mail do Remetente'] }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "[ENDERECO]",
+              "replaceText": "={{ $('Coleta de dados modelo 2').item.json.data['Endereço do Remetente']? $('Coleta de dados modelo 2').item.json.data['Endereço do Remetente'] : \"ENDEREÇO NÃO REGISTRADO\" }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "[CONTEUDO_INJETADO]",
+              "replaceText": "={{ $('Coleta de dados modelo 2').item.json.data['Texto de Conteúdo'] }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "[REMETENTE]",
+              "replaceText": "={{ $('Coleta de dados modelo 2').item.json.data['Nome do Remetente'] }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "[CARGO]",
+              "replaceText": "={{ $('Coleta de dados modelo 2').item.json.data['Cargo do Remetente']? $('Coleta de dados modelo 2').item.json.data['Cargo do Remetente'] : \"\" }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        560,
+        432
+      ],
+      "id": "5c59b7a8-5c25-4463-bd43-81833b70ffa4",
+      "name": "Atualizando os dados do modelo2",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "k9yatLZQhQhsJI3M",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "replaceAll",
+              "text": "[NOME DA EMPRESA]",
+              "replaceText": "={{ $('Coleta de dados modelo3').item.json.data['Identificação da Empresa']? $('Coleta de dados modelo3').item.json.data['Identificação da Empresa']: \"\" }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "[DESTINATARIO]",
+              "replaceText": "={{ $('Coleta de dados modelo3').item.json.data['Destinatário'] }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "[DATA_ATUAL]",
+              "replaceText": "={{$now.format('dd/MM/yyyy')}}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "[TELEFONE]",
+              "replaceText": "={{ $('Coleta de dados modelo3').item.json.data['Telefone do Remetente']? $('Coleta de dados modelo3').item.json.data['Telefone do Remetente'] : \"\" }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "[EMAIL]",
+              "replaceText": "={{ $('Coleta de dados modelo3').item.json.data['E-mail do Remetente']? $('Coleta de dados modelo3').item.json.data['E-mail do Remetente'] : \"\" }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "[ENDERECO]",
+              "replaceText": "={{ $('Coleta de dados modelo3').item.json.data['Endereço do Remetente']? $('Coleta de dados modelo3').item.json.data['Endereço do Remetente'] : \"\" }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "[CONTEUDO_INJETADO]",
+              "replaceText": "={{ $('Coleta de dados modelo3').item.json.data['Texto de Conteúdo'] }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "[REMETENTE]",
+              "replaceText": "={{ $('Coleta de dados modelo3').item.json.data['Nome do Remetente'] }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "[CARGO]",
+              "replaceText": "={{ $('Coleta de dados modelo3').item.json.data['Cargo do Remetente']? $('Coleta de dados modelo3').item.json.data['Cargo do Remetente'] : \"\" }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "[WEBSITE]",
+              "replaceText": "={{ $('Coleta de dados modelo3').item.json.data.Website ? $('Coleta de dados modelo3').item.json.data.Website : \"\" }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        560,
+        752
+      ],
+      "id": "4d0e6ea9-36bb-4116-9acc-a9180663adbe",
+      "name": "Atualizando os dados do modelo3",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "k9yatLZQhQhsJI3M",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Atualizando os dados do modelo3').item.json.documentId }}",
+          "mode": "id"
+        },
+        "options": {
+          "binaryPropertyName": "Papel Timbrado.pdf",
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "application/pdf",
+              "drawingsToFormat": "application/pdf",
+              "slidesToFormat": "application/pdf",
+              "sheetsToFormat": "application/pdf"
+            }
+          },
+          "fileName": "=Papel Timbrado de {{ $('Telegram Trigger').item.json.message.from.first_name }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1600,
+        752
+      ],
+      "id": "56de6d6a-82b4-4c91-96fa-caa9aaf7a93c",
+      "name": "Baixando modelo3 em PDF",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "mHfdNPq21GvfOBkV",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendDocument",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "binaryData": true,
+        "binaryPropertyName": "Papel Timbrado.pdf",
+        "additionalFields": {
+          "fileName": "Papel Timbrado.pdf"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1792,
+        752
+      ],
+      "id": "2f84e1a7-d94e-4c6f-aef2-679f05cf1db9",
+      "name": "Enviando o modelo3",
+      "webhookId": "11db7686-9792-4f82-97f4-b9ca2b4e66de",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendChatAction",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -608,
+        1680
+      ],
+      "id": "6ad123b2-b058-4cf8-925e-0242a296d270",
+      "name": "Typing Action8",
+      "webhookId": "99f5b550-fdd3-4623-bcf1-560e0e2aa56f",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "Olá Bem-vindo! Eu sou seu assistente de automação corporativa. Minhas principais funções são: \n📝 Criar documentos oficiais (`/newdoc`)\n📊 Gerar relatórios financeiros visuais (`/newrelatorio`)\n📰 Pegar notícias rápidas (`/news`)\n🎙️ Transcrever áudios (basta me enviar o áudio).\n\nComo posso te ajudar a aumentar sua produtividade hoje?",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -400,
+        1680
+      ],
+      "id": "17841676-ffb7-4ad2-8cdc-04d6d7a757fc",
+      "name": "Enviar Boas-vindas",
+      "webhookId": "6d83269f-293c-4802-85b3-203f5ed23ead",
+      "credentials": {
+        "telegramApi": {
+          "id": "wq51j5NKw1DLgj6o",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Transcrevendo Audio\n",
+        "height": 240,
+        "width": 800
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        2176
+      ],
+      "id": "2ab6468d-2715-46a8-9d92-47d4cd393000",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "## Agente IA\nLida com qualquer resposta que não seja um comando ou audio\n",
+        "height": 432,
+        "width": 800
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        2464
+      ],
+      "id": "f1189a12-b6cf-4dd6-9399-d533f877f61f",
+      "name": "Sticky Note12"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Pre Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Command?": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Audio?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Extraindo escolha de modelo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Copiando relatorio financeiro",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Typing Action3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Typing Action8",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mensagem fallback comandos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pre Processing": {
+      "main": [
+        [
+          {
+            "node": "Command?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviando doc": {
+      "main": [
+        [
+          {
+            "node": "Baixando modelo2 em PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Typing Action": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Typing Action1": {
+      "main": [
+        [
+          {
+            "node": "Compartilhando modelo2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviando mensagem de sucesso com link": {
+      "main": [
+        [
+          {
+            "node": "Enviando doc",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Copiando relatorio financeiro": {
+      "main": [
+        [
+          {
+            "node": "Send a chat action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a chat action": {
+      "main": [
+        [
+          {
+            "node": "Send message and wait for response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message and wait for response": {
+      "main": [
+        [
+          {
+            "node": "Upload Imagem no Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get cópia do relatorio": {
+      "main": [
+        [
+          {
+            "node": "Set index da imagem",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set index da imagem": {
+      "main": [
+        [
+          {
+            "node": "Update a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Adicionando dados ao relatorio": {
+      "main": [
+        [
+          {
+            "node": "Get cópia do relatorio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Imagem no Drive": {
+      "main": [
+        [
+          {
+            "node": "Conceder permissao de leitura",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conceder permissao de leitura": {
+      "main": [
+        [
+          {
+            "node": "Adicionando dados ao relatorio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a document": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Compartilhando arquivo1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Typing Action2": {
+      "main": [
+        [
+          {
+            "node": "Mensagem de sucesso com link do relatorio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mensagem de sucesso com link do relatorio": {
+      "main": [
+        [
+          {
+            "node": "Enviando doc1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviando doc1": {
+      "main": [
+        [
+          {
+            "node": "Baixando arquivo em PDF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Enviar notícias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Audio?": {
+      "main": [
+        [
+          {
+            "node": "Typing Action4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Typing Action5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get audio": {
+      "main": [
+        [
+          {
+            "node": "Transcrevendo audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Enviar resposta Agente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compartilhando arquivo1": {
+      "main": [
+        [
+          {
+            "node": "Typing Action2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Baixando arquivo em PDF1": {
+      "main": [
+        [
+          {
+            "node": "Enviando o Relatorio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Typing Action3": {
+      "main": [
+        [
+          {
+            "node": "Get conteúdo g1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get conteúdo g1": {
+      "main": [
+        [
+          {
+            "node": "Extrair notícias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extrair notícias": {
+      "main": [
+        [
+          {
+            "node": "Split notícias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split notícias": {
+      "main": [
+        [
+          {
+            "node": "Extrair título e link",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extrair título e link": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Typing Action4": {
+      "main": [
+        [
+          {
+            "node": "Get audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcrevendo audio": {
+      "main": [
+        [
+          {
+            "node": "Enviando audio transcrito",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Typing Action5": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Coleta de dados modelo 1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Coleta de dados modelo 2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Coleta de dados modelo3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraindo escolha de modelo": {
+      "main": [
+        [
+          {
+            "node": "Typing Action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Coleta de dados modelo 2": {
+      "main": [
+        [
+          {
+            "node": "Criando cópia do modelo 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Coleta de dados modelo 1": {
+      "main": [
+        [
+          {
+            "node": "Criando cópia do modelo 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Criando cópia do modelo 1": {
+      "main": [
+        [
+          {
+            "node": "Atualizando os dados do modelo1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Criando cópia do modelo 2": {
+      "main": [
+        [
+          {
+            "node": "Atualizando os dados do modelo2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviando mensagem de sucesso com link1": {
+      "main": [
+        [
+          {
+            "node": "Enviando doc2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviando doc2": {
+      "main": [
+        [
+          {
+            "node": "Baixando modelo1 em PDF2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compartilhando modelo1": {
+      "main": [
+        [
+          {
+            "node": "Enviando mensagem de sucesso com link1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compartilhando modelo2": {
+      "main": [
+        [
+          {
+            "node": "Enviando mensagem de sucesso com link",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Baixando modelo1 em PDF2": {
+      "main": [
+        [
+          {
+            "node": "Enviando o modelo1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Baixando modelo2 em PDF": {
+      "main": [
+        [
+          {
+            "node": "Enviando o modelo2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Typing Action7": {
+      "main": [
+        [
+          {
+            "node": "Compartilhando modelo1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviando doc3": {
+      "main": [
+        [
+          {
+            "node": "Baixando modelo3 em PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Typing Action6": {
+      "main": [
+        [
+          {
+            "node": "Compartilhando modelo3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviando mensagem de sucesso com link2": {
+      "main": [
+        [
+          {
+            "node": "Enviando doc3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Criando cópia do modelo ": {
+      "main": [
+        [
+          {
+            "node": "Atualizando os dados do modelo3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Coleta de dados modelo3": {
+      "main": [
+        [
+          {
+            "node": "Criando cópia do modelo ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compartilhando modelo3": {
+      "main": [
+        [
+          {
+            "node": "Enviando mensagem de sucesso com link2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Atualizando os dados do modelo1": {
+      "main": [
+        [
+          {
+            "node": "Typing Action7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Atualizando os dados do modelo2": {
+      "main": [
+        [
+          {
+            "node": "Typing Action1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Atualizando os dados do modelo3": {
+      "main": [
+        [
+          {
+            "node": "Typing Action6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Baixando modelo3 em PDF": {
+      "main": [
+        [
+          {
+            "node": "Enviando o modelo3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Typing Action8": {
+      "main": [
+        [
+          {
+            "node": "Enviar Boas-vindas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Sao_Paulo",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false,
+    "errorWorkflow": "jAQKWfmT4UTlNGnh"
+  },
+  "versionId": "c3c39d76-c669-4a81-b9df-579fd2d7d55d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7687be7b9f23904ea690729145ca9567b3db61876321f4c1802def4674ef3d04"
+  },
+  "id": "EtO2krbAIim3tbjp",
+  "tags": []
+}
